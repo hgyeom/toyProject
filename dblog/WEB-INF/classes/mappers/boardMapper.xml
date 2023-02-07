@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyeom.dblog.dao.boardMapper">
+
+    <!-- sql문 refId-->
+    <sql id="selectFromBoard">
+        SELECT * FROM content
+    </sql>
+
+    <sql id="count">
+        SELECT count(*) FROM content
+    </sql>
+
+    <!-- sql문 refId 종료 -->
+
+
+    <!-- 로그인을 위한 유저정보 select -->
+    <select id="login_check" resultType="String">
+        select user_name from user_info
+            where user_id = #{user_id} and pwd = #{pwd}
+    </select>
+
+    <!-- 카테고리 목록을 불러옴 -->
+
+    <select id="category" resultType="CategoryDTO">
+        select * from category;
+    </select>
+
+    <!-- 카테고리 목록 종료 -->
+
+    <!-- 전체 게시물 갯수 ( TEST ) -->
+
+    <select id="countAll" resultType="int">
+        <include refid="count"/>
+    </select>
+
+
+    <!-- 카테고리 목록에 맞는 게시물 갯수를 불러옴 -->
+
+
+    <select id="countDiary" resultType="int">
+        <include refid="count"/>
+            where category_name = 'Diary'
+    </select>
+
+    <select id="countTravel" resultType="int">
+        <include refid="count"/>
+            where category_name = 'Travel'
+    </select>
+
+    <select id="countStudy" resultType="int">
+        <include refid="count"/>
+            where category_name = 'Study'
+    </select>
+
+    <!-- 카테고리 목록에 맞는 게시물 갯수를 불러옴 종료 -->
+
+
+    <!--전체 게시물 리스트 12개 -->
+    <select id="selectAll" resultType="ContentDTO">
+        select * from content
+        ORDER BY cre_date DESC, content_id DESC limit 12
+    </select>
+
+    <!-- 카테고리에 맞는 게시물 리스트를 불러옴 / 페이징 구현 후 사용 X -->
+
+<!--    <select id="list" parameterType="int" resultType="ContentDTO">-->
+<!--        select * from content-->
+<!--        where category_id = #{category_id}-->
+<!--         ORDER BY cre_date DESC, content_id DESC-->
+<!--    </select>-->
+
+    <!-- 카테고리에 맞는 게시물 리스트를 불러옴 종료-->
+
+    <!-- 선택한 게시물 불러옴 -->
+
+    <select id="select" parameterType="int" resultType="ContentDTO">
+        <include refid="selectFromBoard"/>
+        WHERE content_id = #{content_id}
+    </select>
+
+    <!-- 선택한 게시물 불러옴 종료-->
+
+    <!--페이징 및 리스트-->
+
+    <select id="selectPage" parameterType="map" resultType="ContentDTO">
+        <include refid="selectFromBoard"/>
+        where category_id = #{category_id}
+        ORDER BY cre_date DESC, content_id DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!--페이징 및 리스트 종료-->
+
+    <!-- 게시물 작성 -->
+    <insert id="insert" parameterType="ContentDTO">
+        INSERT INTO content
+            (category_id,title, content, user_name,category_name)
+        VALUES
+            (#{category_id},#{title}, #{content},#{user_name},#{category_name})
+    </insert>
+
+    <!-- 게시물 작성 -->
+
+    <!-- 게시물 수정 -->
+    <update id="update" parameterType="ContentDTO">
+        UPDATE content
+        SET
+            category_id = #{category_id},
+            category_name = #{category_name},
+            title = #{title},
+            content = #{content}
+        WHERE content_id = #{content_id} AND user_name = #{user_name}
+
+    </update>
+
+    <!-- 게시물 삭제 -->
+
+    <delete id="delete">
+        DELETE FROM content WHERE content_id = #{content_id} and user_name = #{user_name}
+    </delete>
+
+    <delete id="deleteAll">
+        DELETE FROM content
+    </delete>
+
+    <!-- 게시물 삭제 -->
+
+</mapper>
