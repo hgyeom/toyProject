@@ -29,7 +29,7 @@
                         <h2 class="mb-3 font-weight-bold">${contentDTO.title}</h2>
                         <input type="hidden" name="content_id" value="${contentDTO.content_id}">
                         <input type="hidden" name="category_name" value="${contentDTO.category_name.toLowerCase()}">
-                        <p>${contentDTO.content}</p>
+                        <p style="white-space: pre-wrap;">${contentDTO.content}</p>
                         <div class="tag-widget post-tag-container mb-5 mt-5">
                             <div class="tagcloud">
                                 <a href="${contentDTO.category_name}" class="tag-cloud-link">${contentDTO.category_name}</a>
